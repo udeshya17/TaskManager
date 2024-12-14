@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const authRoutes = require("./routes/auth.routes");
+const taskRoutes = require("./routes/task.routes");
 const mongoose = require("mongoose");
 
 const DB_URI = "mongodb+srv://udeshya1706:z2kNm7Q4UIcuk7ZR@cluster0.hpsku.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -16,6 +17,8 @@ mongoose
 app.use(express.json());
 
 app.use("/auth", authRoutes);
+
+app.use("/tasks", taskRoutes);
 
 app.listen(PORT, () => {
   console.log("Server Listening at", PORT);

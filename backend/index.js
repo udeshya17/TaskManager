@@ -11,7 +11,7 @@ const PORT = 8082;
 
 mongoose
   .connect(DB_URI)
-  .then(() => console.log("Connected to DB at", DB_URI))
+  .then(() => console.log("Connected to DB"))
   .catch((error) => console.log("Failed to connect to DB\n", error));
 
 app.use(express.json());

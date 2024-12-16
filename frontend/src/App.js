@@ -8,7 +8,7 @@ import { NavBar } from './components/AppBar';
 import Dashboard from './components/Dashboard';
 
 export const config = {
-  endpoint: `http://localhost:8082`,
+  endpoint: `https://taskmanager-p3xe.onrender.com`,
 };
 
 const App = () => {

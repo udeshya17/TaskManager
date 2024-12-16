@@ -21,6 +21,7 @@ class AuthService {
     return {
       isLoggedIn: await this.verifyPassword(password, user.password),
       userId: user._id,
+      username: user.username,
     };
   };
 
@@ -28,7 +29,8 @@ class AuthService {
     bcrypt.compare(password, hashedPassword);
 
   generateToken = (payload) =>
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 20 });
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
 }
 
 module.exports = AuthService;

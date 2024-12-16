@@ -4,7 +4,15 @@ const AuthServiceInstance = new AuthService();
 const postSignup = async (req, res) => {
   try {
     const newUser = await AuthServiceInstance.create(req.body);
-    res.status(201).send(newUser);
+
+    // Generate JWT token for the newly created user
+    const token = AuthServiceInstance.generateToken({ userId: newUser._id });
+
+    // Send response with user data and token
+    res.status(201).send({
+      ...newUser.toObject(),   // Spread the user object (converts mongoose document to plain object)
+      token: token,           
+    });
   } catch (error) {
     res.status(400).send({ message: error.message });
   }
@@ -12,9 +20,10 @@ const postSignup = async (req, res) => {
 
 const postLogin = async (req, res) => {
   try {
-    const { isLoggedIn, userId } = await AuthServiceInstance.login(req.body);
+    const { isLoggedIn, userId, username } = await AuthServiceInstance.login(req.body);
     if (!isLoggedIn)
       return res.status(401).send({ message: "Invalid credentials" });
+
     res
       .status(200)
       .cookie(
@@ -25,7 +34,11 @@ const postLogin = async (req, res) => {
           maxAge: 20 * 1000,
         }
       )
-      .send({ isLoggedIn, userId });
+      .send({ 
+        isLoggedIn, 
+        userId,
+        username,
+      });
   } catch (error) {
     if (error.message === "User not found")
       return res.status(401).send({ message: error.message });
@@ -33,4 +46,6 @@ const postLogin = async (req, res) => {
   }
 };
 
-module.exports = { postSignup, postLogin };
+
+
+module.exports = { postSignup, postLogin};

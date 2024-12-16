@@ -1,114 +1,53 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Button, Typography, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 
-export const Nav = ({ isAuthenticated, onLogout }) => {
-  const [open, setOpen] = useState(false); // State to manage drawer visibility
+export const NavBar = ({ isAuthenticated, onLogout }) => {
+  const [show, setShow] = useState(false); // State to manage navbar collapse visibility
   const navigate = useNavigate();
 
   const handleLogoutClick = () => {
     onLogout();
     navigate('/login');
-    setOpen(false); // Close the drawer on logout
+    setShow(false); // Collapse the navbar on logout
   };
-
-  const handleLinkClick = () => {
-    setOpen(false); // Close the drawer when a link is clicked
-  };
-
-  const toggleDrawer = (openState) => {
-    setOpen(openState);
-  };
-
-  const drawerLinks = (
-    <List>
-      {isAuthenticated ? (
-        <>
-          <ListItem button component={Link} to="/dashboard" onClick={handleLinkClick}>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-          <ListItem button component={Link} to="/taskmanager" onClick={handleLinkClick}>
-            <ListItemText primary="Task Manager" />
-          </ListItem>
-          <ListItem button onClick={handleLogoutClick}>
-            <ListItemText primary="Logout" />
-          </ListItem>
-        </>
-      ) : (
-        <>
-          <ListItem button component={Link} to="/login" onClick={handleLinkClick}>
-            <ListItemText primary="Login" />
-          </ListItem>
-          <ListItem button component={Link} to="/register" onClick={handleLinkClick}>
-            <ListItemText primary="Register" />
-          </ListItem>
-        </>
-      )}
-    </List>
-  );
 
   return (
-    <AppBar position="static" color="primary">
-      <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
+    <Navbar bg="primary" variant="dark" expand="lg">
+      <Container>
+        <Navbar.Brand as={Link} to="/">
           Task Management
-        </Typography>
+        </Navbar.Brand>
 
-        {/* Hamburger Menu for small screens */}
-        <IconButton
-          edge="end"
-          color="inherit"
-          aria-label="menu"
-          onClick={() => toggleDrawer(true)}
-          sx={{ display: { xs: 'block', sm: 'none' } }} // Show only on small screens
-        >
-          <MenuIcon />
-        </IconButton>
+        {/* Toggle button for small screens */}
+        <Navbar.Toggle aria-controls="navbar-nav" onClick={() => setShow(!show)} />
 
-        {/* Navigation Links for larger screens */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '10px',
-            flexGrow: 1,
-            justifyContent: 'center', // Center Dashboard and Task Manager
-            display: { xs: 'none', sm: 'flex' }, // Hide on small screens
-          }}
-        >
-          {isAuthenticated ? (
-            <>
-              <Button color="inherit" component={Link} to="/dashboard">
-                Dashboard
-              </Button>
-              <Button color="inherit" component={Link} to="/taskmanager">
-                Task Manager
-              </Button>
-            </>
-          ) : null}
-        </div>
-
-        {/* Logout Button on the right end for larger screens */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end', // Align Logout to the right
-            flexGrow: 1,
-            display: { xs: 'none', sm: 'flex' }, // Hide on small screens
-          }}
-        >
-          {isAuthenticated && (
-            <Button color="inherit" onClick={handleLogoutClick}>
-              Logout
-            </Button>
-          )}
-        </div>
-
-        {/* Drawer for mobile view */}
-        <Drawer anchor="right" open={open} onClose={() => toggleDrawer(false)}>
-          {drawerLinks}
-        </Drawer>
-      </Toolbar>
-    </AppBar>
+        {/* Navbar links for larger and smaller screens */}
+        <Navbar.Collapse id="navbar-nav" in={show}>
+          <Nav className="ms-auto">
+            {isAuthenticated ? (
+              <>
+                <Nav.Link as={Link} to="/dashboard">
+                  Dashboard
+                </Nav.Link>
+                <Nav.Link as={Link} to="/taskmanager">
+                  Task Manager
+                </Nav.Link>
+                <Nav.Link onClick={handleLogoutClick}>Logout</Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/login">
+                  Login
+                </Nav.Link>
+                <Nav.Link as={Link} to="/register">
+                  Register
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };

@@ -4,7 +4,7 @@ import { Container } from '@mui/material';
 import Login from './components/Login';
 import Register from './components/Register';
 import { TaskManager } from './components/TaskManager';
-import { Nav } from './components/AppBar';
+import { NavBar } from './components/AppBar';
 import Dashboard from './components/Dashboard';
 
 export const config = {
@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <Router>
-      <Nav isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+      <NavBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       <Container maxWidth="lg">
         <Routes>
           <Route

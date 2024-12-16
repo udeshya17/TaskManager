@@ -30,7 +30,7 @@ const Login = ({ onLoginSuccess }) => {
       onLoginSuccess();
 
       // Redirect to the dashboard
-      navigate('/dashboard');
+      navigate('/taskmanager');
     } catch (error) {
       // Display appropriate error messages
       if (error.response && error.response.status === 401) {

@@ -1,8 +1,8 @@
 const Task = require("../models/task.model");
 
 class TaskService {
-  find = async () => {
-    const tasks = await Task.find({});
+  find = async (userId) => {
+    const tasks = await Task.find({ userId }); // Filter by userId
     return tasks;
   };
 

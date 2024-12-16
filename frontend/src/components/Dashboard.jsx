@@ -25,30 +25,34 @@ const Dashboard = () => {
 
   // Fetch tasks from the backend
   useEffect(() => {
+    // Get userId from localStorage
+    let storedUserId = localStorage.getItem('userId');
+  
+    // Ensure userId is available
+    if (!storedUserId) {
+      console.error("User ID is not found in localStorage");
+      return;
+    }
+  
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`${config.endpoint}/tasks`); 
+        const response = await axios.get(`${config.endpoint}/tasks?userId=${storedUserId}`);
         setTasks(response.data);
-
-        // Calculate task statuses
+  
         const completed = response.data.filter(task => task.status === "DONE").length;
         const pending = response.data.filter(task => task.status === "TODO").length;
-
-        // Calculate expired tasks based on deadline and created_at
         const expired = response.data.filter(task => {
           const currentTime = new Date();
           const taskDeadline = new Date(task.deadline);
           const taskCreatedAt = new Date(task.createdAt);
-
-          // If the task deadline has passed and the task is created before the current time, it's expired
+  
           return taskDeadline <= currentTime && taskCreatedAt <= currentTime;
         }).length;
-
+  
         setCompletedTasks(completed);
         setPendingTasks(pending);
         setExpiredTasks(expired);
-
-        // Get details for pending tasks
+  
         const pendingTasks = response.data.filter(task => task.status === "TODO");
         setPendingTasksDetails(pendingTasks);
       } catch (error) {
@@ -57,9 +61,10 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
+  
     fetchTasks();
-  }, []);
+  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+  
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -119,3 +124,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
